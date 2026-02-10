@@ -19,7 +19,7 @@ const contactInfo = [
   {
     icon: Clock,
     title: "Meeting Times",
-    details: ["Sunday: 10:00 AM", "Wednesday: 5:00 PM", "Friday: 6:00 AM"],
+    details: ["Monday: 4:00 PM - 6:00 PM", "Thursday: 4:00 PM - 6:00 PM", "Saturday: 8:00 AM - 10:00 AM (Worship Practice)"],
   },
 ];
 
