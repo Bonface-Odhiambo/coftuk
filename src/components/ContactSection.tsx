@@ -4,7 +4,7 @@ const contactInfo = [
   {
     icon: MapPin,
     title: "Location",
-    details: ["Technical University of Kenya", "Haile Selassie Avenue", "Nairobi, Kenya"],
+    details: ["Technical University of Kenya", "J19 J Block & E Block 3rd Floor", "Haile Selassie Avenue, Nairobi"],
   },
   {
     icon: Phone,
