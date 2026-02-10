@@ -108,7 +108,7 @@ const JoinSection = () => {
                     <User className="w-5 h-5 text-gold" />
                   </div>
                   <div>
-                    <h4 className="font-medium text-foreground">Personal Mentorship</h4>
+                    <h4 className="font-medium text-foreground">Robust Discipleship</h4>
                     <p className="text-sm text-muted-foreground">
                       Get connected with spiritual mentors
                     </p>
