@@ -9,12 +9,12 @@ const contactInfo = [
   {
     icon: Phone,
     title: "Phone",
-    details: ["+254 712 345 678", "+254 798 765 432"],
+    details: ["+254 797 457762", "+254 704 949187"],
   },
   {
     icon: Mail,
     title: "Email",
-    details: ["fellowship@tukenya.ac.ke", "info@repentanceandholiness.org"],
+    details: ["technicaluniversityrhsf@gmail.com"],
   },
   {
     icon: Clock,
