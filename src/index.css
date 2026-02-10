@@ -1,0 +1,181 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Repentance & Holiness Fellowship Design System
+   Colors: Royal Blue, Pure White, Divine Gold
+   Typography: Playfair Display (headings), Inter (body)
+*/
+
+@layer base {
+  :root {
+    /* Core backgrounds */
+    --background: 210 50% 99%;
+    --foreground: 217 50% 15%;
+
+    /* Card surfaces */
+    --card: 0 0% 100%;
+    --card-foreground: 217 50% 15%;
+
+    /* Popover */
+    --popover: 0 0% 100%;
+    --popover-foreground: 217 50% 15%;
+
+    /* Primary - Royal Blue (Trust, Faith, Heaven) */
+    --primary: 217 85% 45%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary - Soft Blue */
+    --secondary: 210 60% 95%;
+    --secondary-foreground: 217 85% 35%;
+
+    /* Gold accent (Divine, Excellence, Glory) */
+    --accent: 43 90% 55%;
+    --accent-foreground: 43 90% 15%;
+
+    /* Muted tones */
+    --muted: 210 30% 95%;
+    --muted-foreground: 217 20% 45%;
+
+    /* Destructive */
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Borders and inputs */
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 217 85% 45%;
+
+    --radius: 0.75rem;
+
+    /* Custom colors for the fellowship */
+    --gold: 43 90% 55%;
+    --gold-light: 43 85% 75%;
+    --gold-dark: 43 95% 35%;
+    --royal-blue: 217 85% 45%;
+    --royal-blue-light: 217 75% 65%;
+    --royal-blue-dark: 217 90% 30%;
+    --heaven-white: 210 50% 99%;
+    --cloud-white: 210 40% 97%;
+
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(217 85% 45%) 0%, hsl(217 90% 30%) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(43 90% 55%) 0%, hsl(43 95% 40%) 100%);
+    --gradient-divine: linear-gradient(180deg, hsl(210 50% 99%) 0%, hsl(217 60% 95%) 100%);
+
+    /* Shadows */
+    --shadow-soft: 0 4px 20px -4px hsl(217 85% 45% / 0.15);
+    --shadow-gold: 0 4px 20px -4px hsl(43 90% 55% / 0.3);
+    --shadow-elevated: 0 20px 40px -12px hsl(217 85% 45% / 0.2);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', Georgia, serif;
+    @apply font-semibold tracking-tight;
+  }
+}
+
+@layer components {
+  .text-gradient-gold {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(43 90% 55%) 0%, hsl(43 95% 40%) 100%);
+  }
+
+  .text-gradient-blue {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(217 85% 45%) 0%, hsl(217 75% 65%) 100%);
+  }
+
+  .bg-hero-pattern {
+    background-image: 
+      radial-gradient(circle at 20% 50%, hsl(43 90% 55% / 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, hsl(217 85% 45% / 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 40% 80%, hsl(43 90% 55% / 0.08) 0%, transparent 40%);
+  }
+
+  .card-shine {
+    @apply relative overflow-hidden;
+  }
+
+  .card-shine::before {
+    content: '';
+    @apply absolute inset-0 opacity-0 transition-opacity duration-500;
+    background: linear-gradient(135deg, hsl(43 90% 55% / 0.1) 0%, transparent 50%);
+  }
+
+  .card-shine:hover::before {
+    @apply opacity-100;
+  }
+
+  .hover-lift {
+    @apply transition-all duration-300 ease-out;
+  }
+
+  .hover-lift:hover {
+    @apply -translate-y-1;
+    box-shadow: var(--shadow-elevated);
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+
+  .glass-card {
+    @apply backdrop-blur-xl bg-white/80 border border-white/50;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes glow {
+  from { box-shadow: 0 0 20px hsl(43 90% 55% / 0.3); }
+  to { box-shadow: 0 0 30px hsl(43 90% 55% / 0.5); }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.6s ease-out forwards;
+}
+
+.animate-slide-in {
+  animation: slide-in-right 0.5s ease-out forwards;
+}
