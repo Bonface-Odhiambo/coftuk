@@ -21,7 +21,7 @@ const events = [
   },
   {
     title: "Morning Prayers",
-    date: "Every Saturday",
+    date: "Daily",
     time: "8:00 AM - 10:00 AM",
     location: "Snake Park",
     description: "Start your day with powerful prayers and devotion",
