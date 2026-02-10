@@ -41,6 +41,14 @@ export interface Event {
   recurringPattern?: string; // e.g., "Every Sunday", "Last Friday of Month"
 }
 
+export interface Scripture {
+  id: string;
+  reference: string; // e.g., "John 3:16"
+  text: string;
+  isActive: boolean; // Whether this scripture is currently displayed
+  createdAt: string;
+}
+
 // Default data
 import violinPerformance from "@/assets/gallery/violin-performance.jpg";
 import orchestraConductor from "@/assets/gallery/orchestra-conductor.jpg";
@@ -176,11 +184,14 @@ const getLastFridayOfMonth = (): string => {
 
 export const defaultEvents: Event[] = [];
 
+export const defaultScriptures: Scripture[] = [];
+
 // Storage keys
 const LEADERS_KEY = "rh_leaders";
 const GALLERY_KEY = "rh_gallery";
 const MEMBERS_KEY = "rh_members";
 const EVENTS_KEY = "rh_events";
+const SCRIPTURES_KEY = "rh_scriptures";
 
 // Leaders
 export const getLeaders = (): Leader[] => {
@@ -220,4 +231,19 @@ export const getEvents = (): Event[] => {
 
 export const saveEvents = (events: Event[]) => {
   localStorage.setItem(EVENTS_KEY, JSON.stringify(events));
+};
+
+// Scriptures
+export const getScriptures = (): Scripture[] => {
+  const stored = localStorage.getItem(SCRIPTURES_KEY);
+  return stored ? JSON.parse(stored) : defaultScriptures;
+};
+
+export const saveScriptures = (scriptures: Scripture[]) => {
+  localStorage.setItem(SCRIPTURES_KEY, JSON.stringify(scriptures));
+};
+
+export const getActiveScripture = (): Scripture | null => {
+  const scriptures = getScriptures();
+  return scriptures.find(s => s.isActive) || null;
 };

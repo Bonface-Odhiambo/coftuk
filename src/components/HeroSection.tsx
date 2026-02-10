@@ -84,7 +84,7 @@ const HeroSection = () => {
             </div>
             <div className="glass-card rounded-2xl p-6 hover-lift">
               <Users className="w-8 h-8 text-gold mx-auto mb-3" />
-              <p className="font-serif text-2xl font-bold text-foreground">5+</p>
+              <p className="font-serif text-2xl font-bold text-foreground">14+</p>
               <p className="text-sm text-muted-foreground">Years of Service</p>
             </div>
           </div>

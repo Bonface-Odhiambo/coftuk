@@ -12,6 +12,7 @@ import {
   Save,
   UserPlus,
   Calendar,
+  BookOpen,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -33,6 +34,7 @@ import {
   GalleryImage,
   Member,
   Event,
+  Scripture,
   getLeaders,
   saveLeaders,
   getGalleryImages,
@@ -41,10 +43,12 @@ import {
   saveMembers,
   getEvents,
   saveEvents,
+  getScriptures,
+  saveScriptures,
 } from "@/lib/store";
 import { Switch } from "@/components/ui/switch";
 
-type TabValue = "leaders" | "gallery" | "members" | "events";
+type TabValue = "leaders" | "gallery" | "members" | "events" | "scriptures";
 
 const sidebarItems: { icon: typeof LayoutDashboard; label: string; tab: TabValue | null }[] = [
   { icon: LayoutDashboard, label: "Dashboard", tab: null },
@@ -52,6 +56,7 @@ const sidebarItems: { icon: typeof LayoutDashboard; label: string; tab: TabValue
   { icon: ImageIcon, label: "Gallery", tab: "gallery" },
   { icon: UserPlus, label: "Members", tab: "members" },
   { icon: Calendar, label: "Events", tab: "events" },
+  { icon: BookOpen, label: "Scriptures", tab: "scriptures" },
 ];
 
 const AdminDashboard = () => {
@@ -87,6 +92,12 @@ const AdminDashboard = () => {
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
   const [eventForm, setEventForm] = useState<Partial<Event>>({});
 
+  // Scriptures state
+  const [scriptures, setScriptures] = useState<Scripture[]>([]);
+  const [isScriptureDialogOpen, setIsScriptureDialogOpen] = useState(false);
+  const [editingScripture, setEditingScripture] = useState<Scripture | null>(null);
+  const [scriptureForm, setScriptureForm] = useState<Partial<Scripture>>({});
+
   // Check admin access
   useEffect(() => {
     if (!isLoading && (!user || !isAdmin)) {
@@ -105,6 +116,7 @@ const AdminDashboard = () => {
     setGalleryImages(getGalleryImages());
     setMembers(getMembers());
     setEvents(getEvents());
+    setScriptures(getScriptures());
   }, []);
 
   const handleSidebarClick = (tab: TabValue | null) => {
@@ -353,6 +365,67 @@ const AdminDashboard = () => {
     toast({ title: "Event Removed", description: `${event?.title} has been removed.` });
   };
 
+  // --- Scriptures Functions ---
+  const openScriptureDialog = (scripture?: Scripture) => {
+    if (scripture) {
+      setEditingScripture(scripture);
+      setScriptureForm(scripture);
+    } else {
+      setEditingScripture(null);
+      setScriptureForm({ reference: "", text: "", isActive: false, createdAt: new Date().toISOString() });
+    }
+    setIsScriptureDialogOpen(true);
+  };
+
+  const saveScripture = () => {
+    if (!scriptureForm.reference || !scriptureForm.text) {
+      toast({ title: "Missing Information", description: "Please fill in reference and text.", variant: "destructive" });
+      return;
+    }
+
+    let updated: Scripture[];
+    if (editingScripture) {
+      updated = scriptures.map((s) => s.id === editingScripture.id ? { ...s, ...scriptureForm } as Scripture : s);
+      toast({ title: "Scripture Updated", description: `${scriptureForm.reference} has been updated.` });
+    } else {
+      const newScripture: Scripture = {
+        id: Date.now().toString(),
+        reference: scriptureForm.reference || "",
+        text: scriptureForm.text || "",
+        isActive: scriptureForm.isActive || false,
+        createdAt: scriptureForm.createdAt || new Date().toISOString(),
+      };
+      updated = [...scriptures, newScripture];
+      toast({ title: "Scripture Added", description: `${scriptureForm.reference} has been added.` });
+    }
+    setScriptures(updated);
+    saveScriptures(updated);
+    setIsScriptureDialogOpen(false);
+  };
+
+  const deleteScripture = (id: string) => {
+    const scripture = scriptures.find((s) => s.id === id);
+    const updated = scriptures.filter((s) => s.id !== id);
+    setScriptures(updated);
+    saveScriptures(updated);
+    toast({ title: "Scripture Removed", description: `${scripture?.reference} has been removed.` });
+  };
+
+  const toggleScriptureActive = (id: string) => {
+    const updated = scriptures.map((s) => ({
+      ...s,
+      isActive: s.id === id ? !s.isActive : false, // Only one can be active at a time
+    }));
+    setScriptures(updated);
+    saveScriptures(updated);
+    const scripture = updated.find((s) => s.id === id);
+    if (scripture?.isActive) {
+      toast({ title: "Scripture Activated", description: `${scripture.reference} is now displayed on the website.` });
+    } else {
+      toast({ title: "Scripture Deactivated", description: "Scripture has been hidden from the website." });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-muted/30 flex">
       {/* Sidebar */}
@@ -414,7 +487,7 @@ const AdminDashboard = () => {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
           <div className="bg-card rounded-2xl p-6 border border-border shadow-soft">
             <div className="flex items-center gap-4">
               <div className="p-3 bg-gold/10 rounded-xl">
@@ -459,6 +532,17 @@ const AdminDashboard = () => {
               </div>
             </div>
           </div>
+          <div className="bg-card rounded-2xl p-6 border border-border shadow-soft">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-blue-500/10 rounded-xl">
+                <BookOpen className="w-6 h-6 text-blue-500" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-foreground">{scriptures.length}</p>
+                <p className="text-sm text-muted-foreground">Scriptures</p>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Tabs */}
@@ -475,6 +559,9 @@ const AdminDashboard = () => {
             </TabsTrigger>
             <TabsTrigger value="events" className="data-[state=active]:bg-gold/10 data-[state=active]:text-gold">
               Events
+            </TabsTrigger>
+            <TabsTrigger value="scriptures" className="data-[state=active]:bg-gold/10 data-[state=active]:text-gold">
+              Scriptures
             </TabsTrigger>
           </TabsList>
 
@@ -721,14 +808,72 @@ const AdminDashboard = () => {
               </div>
             )}
           </TabsContent>
-        </Tabs>
 
-        {/* Info Card */}
-        <div className="mt-6 p-4 bg-gold/5 border border-gold/20 rounded-xl">
-          <p className="text-sm text-muted-foreground">
-            <span className="font-semibold text-gold-dark">Note:</span> Changes are saved to your browser's localStorage. Connect to a backend for persistent storage across devices.
-          </p>
-        </div>
+          {/* Scriptures Tab */}
+          <TabsContent value="scriptures" className="space-y-4">
+            <div className="flex justify-between items-center">
+              <p className="text-sm text-muted-foreground">Manage daily scriptures for website visitors. Only one scripture can be active at a time.</p>
+              <Button onClick={() => openScriptureDialog()} className="bg-gold hover:bg-gold-dark text-foreground gap-2 shadow-gold">
+                <Plus className="w-4 h-4" />
+                Add Scripture
+              </Button>
+            </div>
+
+            <div className="bg-card rounded-2xl shadow-soft overflow-hidden border border-border">
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="bg-gold/5 border-b border-border">
+                      <th className="text-left px-6 py-4 text-sm font-semibold text-foreground">Reference</th>
+                      <th className="text-left px-6 py-4 text-sm font-semibold text-foreground hidden md:table-cell">Text</th>
+                      <th className="text-center px-6 py-4 text-sm font-semibold text-foreground">Status</th>
+                      <th className="text-right px-6 py-4 text-sm font-semibold text-foreground">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {scriptures.map((scripture) => (
+                      <tr key={scripture.id} className="border-b border-border last:border-0 hover:bg-gold/5 transition-colors">
+                        <td className="px-6 py-4">
+                          <span className="font-medium text-foreground">{scripture.reference}</span>
+                        </td>
+                        <td className="px-6 py-4 text-muted-foreground hidden md:table-cell">
+                          <p className="line-clamp-2 text-sm">{scripture.text}</p>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center justify-center gap-2">
+                            <Switch
+                              checked={scripture.isActive}
+                              onCheckedChange={() => toggleScriptureActive(scripture.id)}
+                            />
+                            <span className="text-xs text-muted-foreground">
+                              {scripture.isActive ? "Active" : "Inactive"}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center justify-end gap-2">
+                            <Button variant="ghost" size="icon" onClick={() => openScriptureDialog(scripture)} className="hover:bg-gold/10 hover:text-gold">
+                              <Pencil className="w-4 h-4" />
+                            </Button>
+                            <Button variant="ghost" size="icon" onClick={() => deleteScripture(scripture.id)} className="hover:bg-destructive/10 hover:text-destructive">
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              {scriptures.length === 0 && (
+                <div className="py-12 text-center">
+                  <BookOpen className="w-12 h-12 text-muted-foreground/50 mx-auto mb-3" />
+                  <p className="text-muted-foreground">No scriptures found</p>
+                </div>
+              )}
+            </div>
+          </TabsContent>
+        </Tabs>
       </main>
 
       {/* Leader Dialog */}
@@ -922,6 +1067,42 @@ const AdminDashboard = () => {
               <Button className="flex-1 bg-gold hover:bg-gold-dark text-foreground gap-2" onClick={saveEvent}>
                 <Save className="w-4 h-4" />
                 {editingEvent ? "Update" : "Add Event"}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Scripture Dialog */}
+      <Dialog open={isScriptureDialogOpen} onOpenChange={setIsScriptureDialogOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="font-serif text-xl">{editingScripture ? "Edit Scripture" : "Add New Scripture"}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 mt-4">
+            <div>
+              <Label>Scripture Reference *</Label>
+              <Input value={scriptureForm.reference || ""} onChange={(e) => setScriptureForm({ ...scriptureForm, reference: e.target.value })} placeholder="John 3:16" className="mt-1.5" />
+            </div>
+            <div>
+              <Label>Scripture Text *</Label>
+              <Textarea value={scriptureForm.text || ""} onChange={(e) => setScriptureForm({ ...scriptureForm, text: e.target.value })} placeholder="For God so loved the world..." className="mt-1.5" rows={4} />
+            </div>
+            <div className="flex items-center justify-between p-3 bg-secondary/50 rounded-lg">
+              <div>
+                <Label className="text-sm font-medium">Display on Website</Label>
+                <p className="text-xs text-muted-foreground">Make this scripture visible to visitors</p>
+              </div>
+              <Switch 
+                checked={scriptureForm.isActive || false} 
+                onCheckedChange={(checked) => setScriptureForm({ ...scriptureForm, isActive: checked })} 
+              />
+            </div>
+            <div className="flex gap-3 pt-4">
+              <Button variant="outline" className="flex-1" onClick={() => setIsScriptureDialogOpen(false)}>Cancel</Button>
+              <Button className="flex-1 bg-gold hover:bg-gold-dark text-foreground gap-2" onClick={saveScripture}>
+                <Save className="w-4 h-4" />
+                {editingScripture ? "Update" : "Add Scripture"}
               </Button>
             </div>
           </div>
