@@ -1,7 +1,6 @@
 import { ArrowRight, Heart, BookOpen, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.jpg";
-import ScriptureSlider from "./ScriptureSlider";
 
 const HeroSection = () => {
   const scrollToJoin = () => {
@@ -52,7 +51,7 @@ const HeroSection = () => {
           </div>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 animate-fade-up" style={{ animationDelay: "0.3s" }}>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16 animate-fade-up" style={{ animationDelay: "0.3s" }}>
             <Button
               onClick={scrollToJoin}
               size="lg"
@@ -70,9 +69,6 @@ const HeroSection = () => {
               Learn More
             </Button>
           </div>
-
-          {/* Scripture Slider */}
-          <ScriptureSlider />
 
           {/* Stats */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-2xl mx-auto animate-fade-up" style={{ animationDelay: "0.4s" }}>
