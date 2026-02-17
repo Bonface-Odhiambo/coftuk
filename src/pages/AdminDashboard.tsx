@@ -33,7 +33,7 @@ import {
   Leader,
   GalleryImage,
   Member,
-  Event,
+  type Event,
   Scripture,
   getLeaders,
   saveLeaders,
