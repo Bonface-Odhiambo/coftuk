@@ -184,7 +184,29 @@ const getLastFridayOfMonth = (): string => {
 
 export const defaultEvents: Event[] = [];
 
-export const defaultScriptures: Scripture[] = [];
+export const defaultScriptures: Scripture[] = [
+  {
+    id: "1",
+    reference: "John 3:16",
+    text: "For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.",
+    isActive: true,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "2",
+    reference: "Philippians 4:13",
+    text: "I can do all things through Christ who strengthens me.",
+    isActive: true,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "3",
+    reference: "Proverbs 3:5-6",
+    text: "Trust in the LORD with all your heart and lean not on your own understanding; in all your ways submit to him, and he will make your paths straight.",
+    isActive: true,
+    createdAt: new Date().toISOString(),
+  },
+];
 
 // Storage keys
 const LEADERS_KEY = "rh_leaders";
