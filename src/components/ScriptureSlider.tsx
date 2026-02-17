@@ -15,8 +15,29 @@ const ScriptureSlider = () => {
     };
 
     loadScriptures();
+    
+    // Listen for storage changes (when admin updates scriptures)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'rh_scriptures') {
+        loadScriptures();
+      }
+    };
+    
+    // Listen for custom event (for same-window updates)
+    const handleScriptureUpdate = () => {
+      loadScriptures();
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('scripturesUpdated', handleScriptureUpdate);
+    
     const interval = setInterval(loadScriptures, 5000);
-    return () => clearInterval(interval);
+    
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('scripturesUpdated', handleScriptureUpdate);
+    };
   }, []);
 
   useEffect(() => {

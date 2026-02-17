@@ -400,6 +400,7 @@ const AdminDashboard = () => {
     }
     setScriptures(updated);
     saveScriptures(updated);
+    window.dispatchEvent(new Event('scripturesUpdated'));
     setIsScriptureDialogOpen(false);
   };
 
@@ -408,6 +409,7 @@ const AdminDashboard = () => {
     const updated = scriptures.filter((s) => s.id !== id);
     setScriptures(updated);
     saveScriptures(updated);
+    window.dispatchEvent(new Event('scripturesUpdated'));
     toast({ title: "Scripture Removed", description: `${scripture?.reference} has been removed.` });
   };
 
@@ -418,6 +420,7 @@ const AdminDashboard = () => {
     }));
     setScriptures(updated);
     saveScriptures(updated);
+    window.dispatchEvent(new Event('scripturesUpdated'));
     const scripture = updated.find((s) => s.id === id);
     if (scripture?.isActive) {
       toast({ title: "Scripture Activated", description: `${scripture.reference} is now displayed on the website.` });
